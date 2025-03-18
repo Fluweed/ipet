@@ -13,11 +13,13 @@
         .thirst { background: blue; }
         .energy { background: orange; }
         .actions button { margin: 5px; padding: 10px; border: none; cursor: pointer; }
+        .pet-image { width: 200px; height: 200px; object-fit: cover; border-radius: 10px; margin: 10px 0; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🐾 Meu Pet Virtual</h1>
+        <img id="petImage" class="pet-image" src="" alt="Pet">
         <p id="status">🌱 Ovo</p>
         <div class="bar"><div class="hunger" style="width:100%">🍖 Fome</div></div>
         <div class="bar"><div class="thirst" style="width:100%">💧 Sede</div></div>
@@ -39,11 +41,22 @@
             alive: true
         };
 
+        const petImages = {
+            "Ovo": "https://cdn.discordapp.com/attachments/SEU_CANAL/SEU_GIF_OVO.gif",
+            "Filhote": "https://cdn.discordapp.com/attachments/SEU_CANAL/SEU_GIF_FILHOTE.gif",
+            "Adulto": "https://cdn.discordapp.com/attachments/SEU_CANAL/SEU_GIF_ADULTO.gif",
+            "Morto": "https://cdn.discordapp.com/attachments/SEU_CANAL/SEU_GIF_MORTO.gif"
+        };
+
         function updateUI() {
             document.querySelector(".hunger").style.width = pet.hunger + "%";
             document.querySelector(".thirst").style.width = pet.thirst + "%";
             document.querySelector(".energy").style.width = pet.energy + "%";
             document.getElementById("status").textContent = pet.alive ? `🦴 ${pet.stage} - ${pet.age} dias` : "💀 O pet morreu!";
+            
+            let petImage = pet.alive ? petImages[pet.stage] : petImages["Morto"];
+            document.getElementById("petImage").src = petImage;
+
             localStorage.setItem("pet", JSON.stringify(pet));
         }
 
