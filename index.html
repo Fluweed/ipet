@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Virtual</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; }
+        .container { max-width: 400px; margin: 20px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .bar { height: 20px; border-radius: 5px; background: lightgray; margin: 5px 0; overflow: hidden; }
+        .bar div { height: 100%; text-align: right; padding-right: 5px; color: white; font-weight: bold; }
+        .hunger { background: red; }
+        .thirst { background: blue; }
+        .energy { background: orange; }
+        .actions button { margin: 5px; padding: 10px; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐾 Meu Pet Virtual</h1>
+        <p id="status">🌱 Ovo</p>
+        <div class="bar"><div class="hunger" style="width:100%">🍖 Fome</div></div>
+        <div class="bar"><div class="thirst" style="width:100%">💧 Sede</div></div>
+        <div class="bar"><div class="energy" style="width:100%">⚡ Energia</div></div>
+        <div class="actions">
+            <button onclick="feed()">🍗 Alimentar</button>
+            <button onclick="drink()">🥤 Beber</button>
+            <button onclick="sleep()">💤 Dormir</button>
+        </div>
+    </div>
+
+    <script>
+        let pet = JSON.parse(localStorage.getItem("pet")) || {
+            hunger: 100,
+            thirst: 100,
+            energy: 100,
+            age: 0,
+            stage: "Ovo",
+            alive: true
+        };
+
+        function updateUI() {
+            document.querySelector(".hunger").style.width = pet.hunger + "%";
+            document.querySelector(".thirst").style.width = pet.thirst + "%";
+            document.querySelector(".energy").style.width = pet.energy + "%";
+            document.getElementById("status").textContent = pet.alive ? `🦴 ${pet.stage} - ${pet.age} dias` : "💀 O pet morreu!";
+            localStorage.setItem("pet", JSON.stringify(pet));
+        }
+
+        function feed() { if (pet.alive) pet.hunger = Math.min(pet.hunger + 20, 100); updateUI(); }
+        function drink() { if (pet.alive) pet.thirst = Math.min(pet.thirst + 20, 100); updateUI(); }
+        function sleep() { if (pet.alive) pet.energy = 100; updateUI(); }
+
+        setInterval(() => {
+            if (pet.alive) {
+                pet.hunger = Math.max(pet.hunger - 5, 0);
+                pet.thirst = Math.max(pet.thirst - 5, 0);
+                pet.energy = Math.max(pet.energy - 5, 0);
+                pet.age++;
+
+                if (pet.age >= 10) pet.stage = "Filhote";
+                if (pet.age >= 30) pet.stage = "Adulto";
+                if (pet.hunger === 0 || pet.thirst === 0) pet.alive = false;
+            }
+            updateUI();
+        }, 5000);
+
+        updateUI();
+    </script>
+</body>
+</html>
