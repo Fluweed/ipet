@@ -14,6 +14,7 @@
         .energy { background: orange; }
         .actions button { margin: 5px; padding: 10px; border: none; cursor: pointer; }
         .pet-image { width: 200px; height: 200px; object-fit: cover; border-radius: 10px; margin: 10px 0; }
+        #revive { display: none; background: green; color: white; padding: 10px; border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -29,6 +30,7 @@
             <button onclick="drink()">🥤 Beber</button>
             <button onclick="sleep()">💤 Dormir</button>
         </div>
+        <button id="revive" onclick="revivePet()">✨ Reviver</button>
     </div>
 
     <script>
@@ -57,12 +59,19 @@
             let petImage = pet.alive ? petImages[pet.stage] : petImages["Morto"];
             document.getElementById("petImage").src = petImage;
 
+            document.getElementById("revive").style.display = pet.alive ? "none" : "block";
+
             localStorage.setItem("pet", JSON.stringify(pet));
         }
 
         function feed() { if (pet.alive) pet.hunger = Math.min(pet.hunger + 20, 100); updateUI(); }
         function drink() { if (pet.alive) pet.thirst = Math.min(pet.thirst + 20, 100); updateUI(); }
         function sleep() { if (pet.alive) pet.energy = 100; updateUI(); }
+
+        function revivePet() {
+            pet = { hunger: 100, thirst: 100, energy: 100, age: 0, stage: "Ovo", alive: true };
+            updateUI();
+        }
 
         setInterval(() => {
             if (pet.alive) {
